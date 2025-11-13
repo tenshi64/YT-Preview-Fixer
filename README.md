@@ -1,6 +1,6 @@
 # YT-Preview-Fixer
 Do you also get annoyed by how loud YouTube video previews can be on the homepage?
-Yeah, me too. That’s why I built this simple browser extension that adds a volume bar to YouTube’s homepage video previews (hover thumbnails) - so you can finally control their sound level without going deaf every time a random preview decides to scream at you.
+Yeah, me too. That’s why I built this simple browser extension that adds a volume bar to YouTube’s homepage video previews - so you can finally control their sound level without going deaf every time a random preview decides to scream at you.
 
 # This extension:
 - Adds a volume slider to the bottom-right corner of each video preview on YouTube’s homepage.
