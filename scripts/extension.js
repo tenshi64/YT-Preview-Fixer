@@ -2,7 +2,7 @@ const divPreviewClassName = ".html5-video-container";
 var divPreview = document.querySelector(divPreviewClassName);
 
 var volume = 0.1; //in range between 0 - 1
-var delay = 2; //in milliseconds
+const delay = 2; //in milliseconds
 
 var url = window.location.toString();
 if(url.includes("youtube") && !url.includes("watch") && !url.includes("shorts"))
