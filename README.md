@@ -3,7 +3,7 @@ Do you also get annoyed by how loud YouTube video previews can be on the homepag
 Yeah, me too. That’s why I built this simple browser extension that adds a volume bar to YouTube’s homepage video previews - so you can finally control their sound level without going deaf every time a random preview decides to scream at you.
 
 # This extension:
-- Adds a volume slider to the bottom-right corner of each video preview on YouTube’s homepage.
+- Adds a volume slider to the top-left corner of each video preview on YouTube’s homepage.
 - Lets you adjust or mute the volume of preview videos independently.
 - Saves your preferred volume level in localStorage, so you don’t have to readjust it every time you reload YouTube.
 - Automatically reduces the volume of previews at a fixed interval (to counter YouTube’s random volume resets).
