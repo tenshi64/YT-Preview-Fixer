@@ -26,8 +26,7 @@ If your browser or YouTube starts lagging, try this:
 - Open the folder /scripts.
 - Edit the file extension.js.
 - At the very top, find the line that defines the variable:
-  ```const delay = 2; //in milliseconds```
-<br>⚠️Increase that number (e.g., 20 or 50).<br>
+  ```const delay = 2; //in milliseconds``` Increase that number (e.g., 20 or 50).
 - After saving the file, refresh (reload) the extension in your browser’s extensions settings page to apply the change.
 
 # How it works
