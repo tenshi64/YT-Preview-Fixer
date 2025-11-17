@@ -116,7 +116,6 @@ function SpawnSlider()
     setInterval(() =>
     {
         url = window.location.toString();
-        console.log(url);
         ChangeVolumeInAllPlayers(videoPlayers, volume);
         videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
     }, delay);
