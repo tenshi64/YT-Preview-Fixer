@@ -5,7 +5,7 @@ var volume = 0.1; //in range between 0 - 1
 const delay = 2; //in milliseconds
 
 var url = window.location.toString();
-if(url.includes("youtube") && !url.includes("watch") && !url.includes("shorts"))
+if(url.includes("youtube") && !url.includes("/watch?v=") && !url.includes("/shorts/"))
 {
     if(!divPreview)
     {
@@ -116,6 +116,7 @@ function SpawnSlider()
     setInterval(() =>
     {
         url = window.location.toString();
+        console.log(url);
         ChangeVolumeInAllPlayers(videoPlayers, volume);
         videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
     }, delay);
@@ -123,7 +124,7 @@ function SpawnSlider()
 
 function ChangeVolumeInAllPlayers(_videoPlayers, _volume)
 {
-    if(url.includes("youtube") && !url.includes("watch") && !url.includes("shorts"))
+    if(url.includes("youtube") && !url.includes("/watch?v=") && !url.includes("/shorts/"))
     {
         for(var i = 0; i < _videoPlayers.length; i++)
         {
