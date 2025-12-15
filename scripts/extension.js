@@ -4,33 +4,29 @@ var divPreview = document.querySelector(divPreviewClassName);
 var volume = 0.1; //in range between 0 - 1
 const delay = 2; //in milliseconds
 
-var url = window.location.toString();
-if(url.includes("youtube") && !url.includes("/watch?v=") && !url.includes("/shorts/"))
+if(!divPreview)
 {
-    if(!divPreview)
-    {
-        var storagedVolume = localStorage.getItem("volume");
+    var storagedVolume = localStorage.getItem("volume");
 
-        if (storagedVolume != null)
-        {
-            if(parseFloat(storagedVolume) < 0 || parseFloat(storagedVolume) > 1)
-            {
-                storagedVolume = 0.5;
-                localStorage.setItem("volume", "0.5");
-            }
-            volume = parseFloat(localStorage.getItem("volume"));
-        }
-        else
+    if (storagedVolume != null)
+    {
+        if(parseFloat(storagedVolume) < 0 || parseFloat(storagedVolume) > 1)
         {
             storagedVolume = 0.5;
             localStorage.setItem("volume", "0.5");
         }
-        WaitForElement(divPreviewClassName, WaitForVideoPlayer, true);
+        volume = parseFloat(localStorage.getItem("volume"));
     }
     else
     {
-        WaitForVideoPlayer();
+        storagedVolume = 0.5;
+        localStorage.setItem("volume", "0.5");
     }
+    WaitForElement(divPreviewClassName, WaitForVideoPlayer, true);
+}
+else
+{
+    WaitForVideoPlayer();
 }
 
 function WaitForElement(_className, _nextFunction, setDivPreview = false)
