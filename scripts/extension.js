@@ -1,32 +1,36 @@
-const divPreviewClassName = ".html5-video-container";
-var divPreview = document.querySelector(divPreviewClassName);
-
+var divPreview = document.querySelector(".html5-video-container");
 var volume = 0.1; //in range between 0 - 1
-const delay = 2; //in milliseconds
+const volumeDelay = 2; //in milliseconds, delay for setting a volume of the video preview
+const searchDelay = 20; //in milliseconds, delay for searching for an HTML element
 
-if(!divPreview)
+
+var url = window.location.toString();
+if(url.toLowerCase().includes("youtube"))
 {
-    var storagedVolume = localStorage.getItem("volume");
-
-    if (storagedVolume != null)
+    if(!divPreview)
     {
-        if(parseFloat(storagedVolume) < 0 || parseFloat(storagedVolume) > 1)
+        var storagedVolume = localStorage.getItem("volume");
+
+        if (storagedVolume != null)
+        {
+            if(parseFloat(storagedVolume) < 0 || parseFloat(storagedVolume) > 1)
+            {
+                storagedVolume = 0.5;
+                localStorage.setItem("volume", "0.5");
+            }
+            volume = parseFloat(localStorage.getItem("volume"));
+        }
+        else
         {
             storagedVolume = 0.5;
             localStorage.setItem("volume", "0.5");
         }
-        volume = parseFloat(localStorage.getItem("volume"));
+        WaitForElement(".html5-video-container", WaitForVideoPlayer, true);
     }
     else
     {
-        storagedVolume = 0.5;
-        localStorage.setItem("volume", "0.5");
+        WaitForVideoPlayer();
     }
-    WaitForElement(divPreviewClassName, WaitForVideoPlayer, true);
-}
-else
-{
-    WaitForVideoPlayer();
 }
 
 function WaitForElement(_className, _nextFunction, setDivPreview = false)
@@ -47,7 +51,7 @@ function WaitForElement(_className, _nextFunction, setDivPreview = false)
                 _nextFunction();
                 clearInterval(interval);
             }
-        }, 50);
+        }, searchDelay);
     }
     else
     {
@@ -96,7 +100,7 @@ function SpawnSlider()
 
     if(mediaContainer)
     {
-        document.querySelector("#media-container").append(volumeSlider);
+        mediaContainer.append(volumeSlider);
     }
     else
     {
@@ -109,21 +113,35 @@ function SpawnSlider()
         localStorage.setItem("volume", volume.toString());
     })
 
+
     setInterval(() =>
     {
-        url = window.location.toString();
+        SendOneMessage("can change volume");
         ChangeVolumeInAllPlayers(videoPlayers, volume);
-        videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
-    }, delay);
+        if(videoPlayers.length < 2)
+        {
+            videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
+        }
+    }, volumeDelay);
 }
 
 function ChangeVolumeInAllPlayers(_videoPlayers, _volume)
 {
-    if(url.includes("youtube") && !url.includes("/watch?v=") && !url.includes("/shorts/"))
+    for(var i = 0; i < _videoPlayers.length; i++)
     {
-        for(var i = 0; i < _videoPlayers.length; i++)
+        if(_videoPlayers[i].getAttribute("data-no-fullscreen") != null || _videoPlayers[i].getAttribute("data-no-fullscreen") == true)
         {
             _videoPlayers[i].volume = _volume;
         }
+    }
+}
+
+var lastMessage = "";
+function SendOneMessage(_content)
+{
+    if(_content != lastMessage)
+    {
+        console.log(_content);
+        lastMessage = _content;
     }
 }
