@@ -128,11 +128,11 @@ function SetupEverything()
 
     setInterval(() =>
     {
-        ChangeVolumeInAllPlayers(videoPlayers, volume);
         if(videoPlayers.length < 2)
         {
             videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
         }
+        ChangeVolumeInAllPlayers(videoPlayers, volume);
     }, volumeDelay);
 }
 
