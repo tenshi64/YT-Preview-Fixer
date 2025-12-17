@@ -1,8 +1,13 @@
 var divPreview = document.querySelector(".html5-video-container");
+const css = '.preview-volume-volumeSlider{opacity: 0.5; transition: 0.5s; -webkit-transition: 0.5s; -moz-transition: 0.5s; outline: 2px solid #3d3d3dff; border-radius: 5px; background:black;} .preview-volume-volumeSlider:hover{opacity: 0.8; outline: 4px solid #3d3d3dff} .preview-volume-volumeSlider::-webkit-slider-thumb{border-radius: 5px; outline: 2px solid #3d3d3dff;} .preview-volume-volumeSlider::-moz-range-thumb{border-radius: 5px; outline: 2px solid #3d3d3dff;}';
+var style = null;
+var volumeSlider = null;
 var volume = 0.1; //in range between 0 - 1
+var videoPlayers = null;
+
+/*CUSTOMIZABLE VALUES, NOTE: THE LARGER THE VALUES, THE MORE RANDOM MOMENTARY INCREASES IN SOUND VOLUME (AND BETTER PERFORMANCE)*/
 const volumeDelay = 2; //in milliseconds, delay for setting a volume of the video preview
 const searchDelay = 20; //in milliseconds, delay for searching for an HTML element
-
 
 var url = window.location.toString();
 if(url.toLowerCase().includes("youtube"))
@@ -65,13 +70,18 @@ function WaitForElement(_className, _nextFunction, setDivPreview = false)
 
 function WaitForVideoPlayer()
 {
-    WaitForElement(".video-stream.html5-main-video", SpawnSlider);  
+    WaitForElement(".video-stream.html5-main-video", SetupEverything);  
 }
 
 function SpawnSlider()
 {
+    if(volumeSlider != null)
+    {
+        volumeSlider.remove();
+    }
+
     //spawn the slider
-    const volumeSlider = document.createElement("input");
+    volumeSlider = document.createElement("input");
     volumeSlider.setAttribute("type", "range");
     volumeSlider.setAttribute("class", "preview-volume-volumeSlider");
     volumeSlider.setAttribute("step", "0.01");
@@ -80,23 +90,23 @@ function SpawnSlider()
     volumeSlider.setAttribute("value", volume);
     volumeSlider.style.zIndex = "100";
 
+    volumeSlider.addEventListener("input", () => {
+        ChangeVolumeInAllPlayers(videoPlayers, volume);
+        volume = volumeSlider.value;
+        localStorage.setItem("volume", volume.toString());
+    })
+
     //spawn style, change slider's appearance
-    var css = '.preview-volume-volumeSlider{opacity: 0.5; transition: 0.5s; -webkit-transition: 0.5s; -moz-transition: 0.5s; outline: 2px solid #3d3d3dff; border-radius: 5px; background:black;} .preview-volume-volumeSlider:hover{opacity: 0.8; outline: 4px solid #3d3d3dff} .preview-volume-volumeSlider::-webkit-slider-thumb{border-radius: 5px; outline: 2px solid #3d3d3dff;} .preview-volume-volumeSlider::-moz-range-thumb{border-radius: 5px; outline: 2px solid #3d3d3dff;}';
-    var style = document.createElement('style');
-
-    if (style.styleSheet)
+    if(style == null)
     {
-        style.styleSheet.cssText = css;
-    }
-    else
-    {
+        style = document.createElement('style');
         style.appendChild(document.createTextNode(css));
-    }
 
-    document.getElementsByTagName('head')[0].appendChild(style);
+        document.getElementsByTagName('head')[0].appendChild(style);
+    }
 
     const mediaContainer = document.querySelector("#media-container");
-    var videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
+    videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
 
     if(mediaContainer)
     {
@@ -104,19 +114,20 @@ function SpawnSlider()
     }
     else
     {
-        delete window.volumeSlider;
+        if(volumeSlider != null)
+        {
+            volumeSlider.remove();
+        }
+        volumeSlider = null;
     }
+}
 
-    volumeSlider.addEventListener("input", () => {
-        ChangeVolumeInAllPlayers(videoPlayers, volume);
-        volume = volumeSlider.value;
-        localStorage.setItem("volume", volume.toString());
-    })
-
+function SetupEverything()
+{
+    SpawnSlider();
 
     setInterval(() =>
     {
-        SendOneMessage("can change volume");
         ChangeVolumeInAllPlayers(videoPlayers, volume);
         if(videoPlayers.length < 2)
         {
@@ -132,16 +143,11 @@ function ChangeVolumeInAllPlayers(_videoPlayers, _volume)
         if(_videoPlayers[i].getAttribute("data-no-fullscreen") != null || _videoPlayers[i].getAttribute("data-no-fullscreen") == true)
         {
             _videoPlayers[i].volume = _volume;
-        }
-    }
-}
 
-var lastMessage = "";
-function SendOneMessage(_content)
-{
-    if(_content != lastMessage)
-    {
-        console.log(_content);
-        lastMessage = _content;
+            if(volumeSlider == null)
+            {
+                SpawnSlider();
+            }
+        }
     }
 }
