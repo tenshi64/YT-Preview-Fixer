@@ -4,6 +4,7 @@ var style = null;
 var volumeSlider = null;
 var volume = 0.1; //in range between 0 - 1
 var videoPlayers = null;
+var wasShortVideo;
 
 /*CUSTOMIZABLE VALUES, NOTE: THE LARGER THE VALUES, THE MORE RANDOM MOMENTARY INCREASES IN SOUND VOLUME (AND BETTER PERFORMANCE)*/
 const volumeDelay = 2; //in milliseconds, delay for setting a volume of the video preview
@@ -128,9 +129,17 @@ function SetupEverything()
 
     setInterval(() =>
     {
-        if(videoPlayers.length < 2)
+        url = window.location.toString();
+        if(videoPlayers.length < 2 || (wasShortVideo && !url.toLowerCase().includes("shorts")))
         {
-            videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
+            console.log("searching");
+            var _videoPlayers = document.querySelectorAll(".video-stream.html5-main-video");
+
+            if(wasShortVideo && (_videoPlayers[0] != videoPlayers[0] || _videoPlayers[1] != videoPlayers[1]))
+            {
+                wasShortVideo = false;
+            }
+            videoPlayers = _videoPlayers;
         }
         ChangeVolumeInAllPlayers(videoPlayers, volume);
     }, volumeDelay);
@@ -138,16 +147,22 @@ function SetupEverything()
 
 function ChangeVolumeInAllPlayers(_videoPlayers, _volume)
 {
-    for(var i = 0; i < _videoPlayers.length; i++)
+    if(!url.toLowerCase().includes("shorts"))
     {
-        if(_videoPlayers[i].getAttribute("data-no-fullscreen") != null || _videoPlayers[i].getAttribute("data-no-fullscreen") == true)
+        for(var i = 0; i < _videoPlayers.length; i++)
         {
-            _videoPlayers[i].volume = _volume;
-
-            if(volumeSlider == null)
+            if(_videoPlayers[i].getAttribute("data-no-fullscreen") != null || _videoPlayers[i].getAttribute("data-no-fullscreen") == true)
             {
-                SpawnSlider();
+                _videoPlayers[i].volume = _volume;
+                if(volumeSlider == null)
+                {
+                    SpawnSlider();
+                }
             }
         }
+    }
+    else
+    {
+        wasShortVideo = true;
     }
 }
