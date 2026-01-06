@@ -13,21 +13,20 @@ Yeah, me too. That’s why I built this simple browser extension that adds a vol
 Go to the repository page.
 - Click the green “Code” button → choose “Download ZIP”.
 - Extract the ZIP file somewhere on your computer.
-- Open your browser’s Extensions or Add-ons page.
-- In Chrome/Edge/Brave: go to chrome://extensions/ and enable Developer mode.
+- Open your browser’s Extensions or Add-ons page and enable Developer mode.
 - Click “Load unpacked” and select the folder you just extracted.
 - Refresh YouTube. You should now see the volume slider when hovering over videos on the homepage.
 
 # Screenshot
 ![Screenshot1](https://github.com/tenshi64/YT-Preview-Fixer/blob/main/screenshots/screenshot.png)
 
-# Help! YouTube/my PC lags when using this extension
+# Help! YouTube/PC lags when using this extension
 If your browser or YouTube starts lagging, try this:
 - Go to the extension’s installation folder.
 - Open the folder /scripts.
 - Edit the file extension.js.
 - At the very top, find the line that defines the variable:
-  ```const delay = 2; //in milliseconds``` Increase that number (e.g., 20 or 50).
+  ```const volumeDelay = 2; //in milliseconds``` Increase that number (e.g., 20 or 50).
 - After saving the file, refresh (reload) the extension in your browser’s extensions settings page to apply the change.
 
 # How it works
